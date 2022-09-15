@@ -1,0 +1,10 @@
+(** @canonical Transformer_stuff.Matrices *)
+module Matrices = Transformer_stuff__Matrices
+
+
+(** @canonical Transformer_stuff.Stats *)
+module Stats = Transformer_stuff__Stats
+
+
+(** @canonical Transformer_stuff.Transformer *)
+module Transformer = Transformer_stuff__Transformer

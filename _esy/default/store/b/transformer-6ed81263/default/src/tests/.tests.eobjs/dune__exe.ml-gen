@@ -1,0 +1,10 @@
+(** @canonical Dune__exe.Matrices *)
+module Matrices = Dune__exe__Matrices
+
+
+(** @canonical Dune__exe.Micrograd *)
+module Micrograd = Dune__exe__Micrograd
+
+
+(** @canonical Dune__exe.Tests *)
+module Tests = Dune__exe__Tests

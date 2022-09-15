@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "ocaml": "*",
+    "@opam/dune": "*",
+    "@opam/ocaml-lsp-server": "*",
+    "@opam/alcotest": "*",
+    "@opam/ocamlformat": "*",
+    "@opam/ppx_deriving":"*"
+  }
+}

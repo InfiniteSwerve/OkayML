@@ -1,0 +1,22 @@
+(** @canonical Transformer_stuff.Autodiff *)
+module Autodiff = Transformer_stuff__Autodiff
+
+
+(** @canonical Transformer_stuff.Matrices *)
+module Matrices = Transformer_stuff__Matrices
+
+
+(** @canonical Transformer_stuff.Micrograd *)
+module Micrograd = Transformer_stuff__Micrograd
+
+
+(** @canonical Transformer_stuff.Mlp *)
+module Mlp = Transformer_stuff__Mlp
+
+
+(** @canonical Transformer_stuff.Stats *)
+module Stats = Transformer_stuff__Stats
+
+
+(** @canonical Transformer_stuff.Transformer *)
+module Transformer = Transformer_stuff__Transformer

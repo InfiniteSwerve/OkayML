@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "ocaml": "*",
+    "@opam/dune": "*",
+    "@opam/ocaml-lsp-server": "*",
+    "@opam/lacaml": "*",
+    "@opam/alcotest": "*"
+  }
+}

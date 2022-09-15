@@ -1,0 +1,9 @@
+(executable
+ (name tests)
+ (libraries alcotest transformer_stuff))
+
+(rule
+ (alias runtest)
+ (deps tests.exe)
+ (action
+  (run %{deps} -q --color=always)))

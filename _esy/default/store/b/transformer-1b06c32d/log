@@ -1,0 +1,227 @@
+# /home/thetis/.esy/3__________________________________________________________________/i/opam__s__dune-opam__c__3.4.1-f8c02654/bin/dune runtest
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Workspace root: /home/thetis/Code/exploring/transformer
+# Auto-detected concurrency: 8
+$ /home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/bin/ocamlc.opt -config > /tmp/dune_405a77_output
+# Dune context:
+#  { name = "default"
+#  ; kind = "default"
+#  ; profile = Dev
+#  ; merlin = true
+#  ; for_host = None
+#  ; fdo_target_exe = None
+#  ; build_dir = "default"
+#  ; toplevel_path =
+#      Some
+#        External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/lib/ocaml"
+#  ; ocaml_bin =
+#      External
+#        "/home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/bin"
+#  ; ocaml =
+#      Ok
+#        External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/bin/ocaml"
+#  ; ocamlc =
+#      External
+#        "/home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/bin/ocamlc.opt"
+#  ; ocamlopt =
+#      Ok
+#        External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/bin/ocamlopt.opt"
+#  ; ocamldep =
+#      Ok
+#        External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/bin/ocamldep.opt"
+#  ; ocamlmklib =
+#      Ok
+#        External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/bin/ocamlmklib.opt"
+#  ; env =
+#      map
+#        { "DUNE_OCAML_HARDCODED" :
+#            "/home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/lib"
+#        ; "DUNE_OCAML_STDLIB" :
+#            "/home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/lib/ocaml"
+#        ; "DUNE_SOURCEROOT" : "/home/thetis/Code/exploring/transformer"
+#        ; "INSIDE_DUNE" :
+#            "/home/thetis/Code/exploring/transformer/_esy/default/store/b/transformer-1b06c32d/default"
+#        ; "MANPATH" :
+#            "/home/thetis/Code/exploring/transformer//home/thetis/Code/exploring/transformer/_esy/default/store/b/transformer-1b06c32d/install/default/bin"
+#        ; "OCAMLFIND_IGNORE_DUPS_IN" :
+#            "/home/thetis/Code/exploring/transformer//home/thetis/Code/exploring/transformer/_esy/default/store/b/transformer-1b06c32d/install/default/lib"
+#        ; "OCAMLTOP_INCLUDE_PATH" :
+#            "/home/thetis/Code/exploring/transformer//home/thetis/Code/exploring/transformer/_esy/default/store/b/transformer-1b06c32d/install/default/lib/toplevel"
+#        ; "OCAML_COLOR" : "always"
+#        ; "OPAMCOLOR" : "always"
+#        }
+#  ; findlib_paths =
+#      [ External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__alcotest-opam__c__1.6.0-0c7b2c64/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__dune-opam__c__3.4.1-f8c02654/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__ocaml_lsp_server-opam__c__1.13.1-fc55813c/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/esy_ocaml__s__substs-0.0.1-ed6217b4/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__astring-opam__c__0.8.5-cd1abc60/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__cmdliner-opam__c__1.1.1-0d422719/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__fmt-opam__c__0.9.0-045e4656/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__ocaml_syntax_shims-opam__c__1.0.0-61ec26ec/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__re-opam__c__1.10.4-38b9ff17/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__stdlib_shims-opam__c__0.3.0-92456a55/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__uutf-opam__c__1.0.3-155e56ea/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__base_threads-opam__c__base-f93e1d7d/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__base_unix-opam__c__base-dc4b97fb/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__chrome_trace-opam__c__3.4.1-a671069e/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__csexp-opam__c__1.5.1-822e5b81/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__dune_build_info-opam__c__3.4.1-40d56d8d/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__dune_rpc-opam__c__3.4.1-205e5b4a/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__dyn-opam__c__3.4.1-222d02bd/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__fiber-opam__c__3.4.1-114bf6c9/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__ocamlformat_rpc_lib-opam__c__0.24.1-401fa398/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__octavius-opam__c__1.2.2-d10375c7/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__omd-opam__c__1.3.2-828589a0/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__ordering-opam__c__3.4.1-547f5929/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__pp-opam__c__1.1.2-083b1ba0/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__ppx__yojson__conv__lib-opam__c__v0.15.0-301f6ab0/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__spawn-opam__c__v0.15.1-ccc1038e/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__stdune-opam__c__3.4.1-9e982238/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__xdg-opam__c__3.4.1-4b7b3f37/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__yojson-opam__c__2.0.1-c9f6915c/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__ocamlbuild-opam__c__0.14.1-f1313599/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__ocamlfind-opam__c__1.9.5-6c0224a2/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__topkg-opam__c__1.0.5-5f4b7306/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__seq-opam__c__base-7584ac13/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__base_bigarray-opam__c__base-61486c0c/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__base_bytes-opam__c__base-14b8d7ee/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/opam__s__cppo-opam__c__1.6.9-37663b21/lib"
+#      ; External
+#          "/home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/lib"
+#      ]
+#  ; arch_sixtyfour = true
+#  ; natdynlink_supported = true
+#  ; supports_shared_libraries = true
+#  ; ocaml_config =
+#      { version = "4.14.0"
+#      ; standard_library_default =
+#          "/home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/lib/ocaml"
+#      ; standard_library =
+#          "/home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/lib/ocaml"
+#      ; standard_runtime = "the_standard_runtime_variable_was_deleted"
+#      ; ccomp_type = "cc"
+#      ; c_compiler = "gcc"
+#      ; ocamlc_cflags =
+#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread"; "-fPIC" ]
+#      ; ocamlc_cppflags = [ "-D_FILE_OFFSET_BITS=64" ]
+#      ; ocamlopt_cflags =
+#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread"; "-fPIC" ]
+#      ; ocamlopt_cppflags = [ "-D_FILE_OFFSET_BITS=64" ]
+#      ; bytecomp_c_compiler =
+#          [ "gcc"
+#          ; "-O2"
+#          ; "-fno-strict-aliasing"
+#          ; "-fwrapv"
+#          ; "-pthread"
+#          ; "-fPIC"
+#          ; "-D_FILE_OFFSET_BITS=64"
+#          ]
+#      ; bytecomp_c_libraries = [ "-lm"; "-lpthread" ]
+#      ; native_c_compiler =
+#          [ "gcc"
+#          ; "-O2"
+#          ; "-fno-strict-aliasing"
+#          ; "-fwrapv"
+#          ; "-pthread"
+#          ; "-fPIC"
+#          ; "-D_FILE_OFFSET_BITS=64"
+#          ]
+#      ; native_c_libraries = [ "-lm" ]
+#      ; native_pack_linker = [ "ld"; "-r"; "-o" ]
+#      ; cc_profile = []
+#      ; architecture = "amd64"
+#      ; model = "default"
+#      ; int_size = 63
+#      ; word_size = 64
+#      ; system = "linux"
+#      ; asm = [ "as" ]
+#      ; asm_cfi_supported = true
+#      ; with_frame_pointers = false
+#      ; ext_exe = ""
+#      ; ext_obj = ".o"
+#      ; ext_asm = ".s"
+#      ; ext_lib = ".a"
+#      ; ext_dll = ".so"
+#      ; os_type = "Unix"
+#      ; default_executable_name = "a.out"
+#      ; systhread_supported = true
+#      ; host = "x86_64-pc-linux-gnu"
+#      ; target = "x86_64-pc-linux-gnu"
+#      ; profiling = false
+#      ; flambda = false
+#      ; spacetime = false
+#      ; safe_string = true
+#      ; exec_magic_number = "Caml1999X031"
+#      ; cmi_magic_number = "Caml1999I031"
+#      ; cmo_magic_number = "Caml1999O031"
+#      ; cma_magic_number = "Caml1999A031"
+#      ; cmx_magic_number = "Caml1999Y031"
+#      ; cmxa_magic_number = "Caml1999Z031"
+#      ; ast_impl_magic_number = "Caml1999M031"
+#      ; ast_intf_magic_number = "Caml1999N031"
+#      ; cmxs_magic_number = "Caml1999D031"
+#      ; cmt_magic_number = "Caml1999T031"
+#      ; natdynlink_supported = true
+#      ; supports_shared_libraries = true
+#      ; windows_unicode = false
+#      }
+#  }
+$ (cd /home/thetis/Code/exploring/transformer/_esy/default/store/b/transformer-1b06c32d/default && /home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/bin/ocamldep.opt -modules -impl src/tests/tests.ml) > /home/thetis/Code/exploring/transformer/_esy/default/store/b/transformer-1b06c32d/default/src/tests/.tests.eobjs/tests.ml.d
+$ (cd /home/thetis/Code/exploring/transformer/_esy/default/store/b/transformer-1b06c32d/default && /home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I src/tests/.tests.eobjs/byte -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__alcotest-opam__c__1.6.0-0c7b2c64/lib/alcotest -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__alcotest-opam__c__1.6.0-0c7b2c64/lib/alcotest/engine -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__alcotest-opam__c__1.6.0-0c7b2c64/lib/alcotest/stdlib_ext -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__astring-opam__c__0.8.5-cd1abc60/lib/astring -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__cmdliner-opam__c__1.1.1-0d422719/lib/cmdliner -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__fmt-opam__c__0.9.0-045e4656/lib/fmt -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__re-opam__c__1.10.4-38b9ff17/lib/re -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__seq-opam__c__base-7584ac13/lib/seq -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__stdlib_shims-opam__c__0.3.0-92456a55/lib/stdlib-shims -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__uutf-opam__c__1.0.3-155e56ea/lib/uutf -I src/.transformer_stuff.objs/byte -no-alias-deps -opaque -open Dune__exe -o src/tests/.tests.eobjs/byte/dune__exe__Tests.cmo -c -impl src/tests/tests.ml)
+$ (cd /home/thetis/Code/exploring/transformer/_esy/default/store/b/transformer-1b06c32d/default && /home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I src/tests/.tests.eobjs/byte -I src/tests/.tests.eobjs/native -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__alcotest-opam__c__1.6.0-0c7b2c64/lib/alcotest -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__alcotest-opam__c__1.6.0-0c7b2c64/lib/alcotest/engine -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__alcotest-opam__c__1.6.0-0c7b2c64/lib/alcotest/stdlib_ext -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__astring-opam__c__0.8.5-cd1abc60/lib/astring -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__cmdliner-opam__c__1.1.1-0d422719/lib/cmdliner -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__fmt-opam__c__0.9.0-045e4656/lib/fmt -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__re-opam__c__1.10.4-38b9ff17/lib/re -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__seq-opam__c__base-7584ac13/lib/seq -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__stdlib_shims-opam__c__0.3.0-92456a55/lib/stdlib-shims -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__uutf-opam__c__1.0.3-155e56ea/lib/uutf -I src/.transformer_stuff.objs/byte -I src/.transformer_stuff.objs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o src/tests/.tests.eobjs/native/dune__exe__Tests.cmx -c -impl src/tests/tests.ml)
+$ (cd /home/thetis/Code/exploring/transformer/_esy/default/store/b/transformer-1b06c32d/default && /home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -o src/tests/tests.exe /home/thetis/.esy/3__________________________________________________________________/i/opam__s__astring-opam__c__0.8.5-cd1abc60/lib/astring/astring.cmxa /home/thetis/.esy/3__________________________________________________________________/i/opam__s__cmdliner-opam__c__1.1.1-0d422719/lib/cmdliner/cmdliner.cmxa /home/thetis/.esy/3__________________________________________________________________/i/opam__s__uutf-opam__c__1.0.3-155e56ea/lib/uutf/uutf.cmxa /home/thetis/.esy/3__________________________________________________________________/i/opam__s__alcotest-opam__c__1.6.0-0c7b2c64/lib/alcotest/stdlib_ext/alcotest_stdlib_ext.cmxa /home/thetis/.esy/3__________________________________________________________________/i/opam__s__fmt-opam__c__0.9.0-045e4656/lib/fmt/fmt.cmxa /home/thetis/.esy/3__________________________________________________________________/i/opam__s__fmt-opam__c__0.9.0-045e4656/lib/fmt/fmt_cli.cmxa /home/thetis/.esy/3__________________________________________________________________/i/opam__s__re-opam__c__1.10.4-38b9ff17/lib/re/re.cmxa /home/thetis/.esy/3__________________________________________________________________/i/opam__s__stdlib_shims-opam__c__0.3.0-92456a55/lib/stdlib-shims/stdlib_shims.cmxa /home/thetis/.esy/3__________________________________________________________________/i/opam__s__alcotest-opam__c__1.6.0-0c7b2c64/lib/alcotest/engine/alcotest_engine.cmxa /home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/lib/ocaml/unix.cmxa -I /home/thetis/.esy/3__________________________________________________________________/i/ocaml-4.14.0-c4de7b44/lib/ocaml /home/thetis/.esy/3__________________________________________________________________/i/opam__s__fmt-opam__c__0.9.0-045e4656/lib/fmt/fmt_tty.cmxa /home/thetis/.esy/3__________________________________________________________________/i/opam__s__alcotest-opam__c__1.6.0-0c7b2c64/lib/alcotest/alcotest.cmxa -I /home/thetis/.esy/3__________________________________________________________________/i/opam__s__alcotest-opam__c__1.6.0-0c7b2c64/lib/alcotest src/transformer_stuff.cmxa src/tests/.tests.eobjs/native/dune__exe.cmx src/tests/.tests.eobjs/native/dune__exe__Matrices.cmx src/tests/.tests.eobjs/native/dune__exe__Tests.cmx)
+$ (cd /home/thetis/Code/exploring/transformer/_esy/default/store/b/transformer-1b06c32d/default/src/tests && ./tests.exe -q --color=always)
+> Testing `proj'.
+> This run has ID `MXXTDWQY'.
+>
+>   [OK]          matrices          0   dot product.
+>   [OK]          matrices          1   dot product.
+>   [OK]          matrices          2   dot product.
+>
+> Full test results in `~/Code/exploring/transformer/_esy/default/store/b/transformer-1b06c32d/default/src/tests/_build/_tests/proj'.
+> Test Successful in 0.000s. 3 tests run.
