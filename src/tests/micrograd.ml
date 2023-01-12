@@ -1,81 +1,143 @@
 open Transformer_stuff.Micrograd
 open Alcotest
+open Utils
 
-let a = Value.c ~label:"a" 0.
-let b : Value.t = {
-  value=0.;
-  prev = [a];
-  op = "";
-  grad = 0.;
-  backward = (Value.empty 0.).backward;
-  label = "b";
-  index = Value.get_index ()
-  }
-  
-let d : Value.t = {
-  value=0.;
-  prev = [a];
-  op = "";
-  grad = 0.;
-  backward = (Value.empty 0.).backward;
-  label = "d";
-  index = Value.get_index ()
+let value_testable = testable Value.pp_value Value.eq
+let a = Value.co ~label:"a" 0.
+
+let b : Value.t =
+  {
+    value = 0.;
+    prev = [ a ];
+    op = "";
+    grad = 0.;
+    backward = Value.empty.backward;
+    label = "b";
+    index = Value.get_index ();
   }
 
-let c = Value.(a + (c ~label:"b" 0.))
+let d : Value.t =
+  {
+    value = 0.;
+    prev = [ a ];
+    op = "";
+    grad = 0.;
+    backward = Value.empty.backward;
+    label = "d";
+    index = Value.get_index ();
+  }
+
+let c = Value.(a + co ~label:"b" 0.)
 let e = Value.(a + d)
+
 let test_topological_sort_c () =
-  topological_sort a
+  Utils.topological_sort a
   |> List.map (fun (value : Value.t) -> value.label)
-  |> check (list @@ string) "1 c" ["a"]
+  |> check (list @@ string) "1 c" [ "a" ]
 
 let test_topological_sort_linked_list () =
-  topological_sort b
+  Utils.topological_sort b
   |> List.map (fun (value : Value.t) -> value.label)
-  |> check (list @@ string) "a -> b" ["b";"a"]
+  |> check (list @@ string) "a -> b" [ "b"; "a" ]
 
 let test_topological_sort_bin_tree () =
-  topological_sort c
+  Utils.topological_sort c
   |> List.map (fun (value : Value.t) -> value.label)
-  |> check (list @@ string) "a+b -> a,b" ["ab";"b";"a"]
+  |> check (list @@ string) "a+b -> a,b" [ "a+b"; "b"; "a" ]
 
 let test_topological_sort_higher_tree () =
-  topological_sort e
+  Utils.topological_sort e
   |> List.map (fun (value : Value.t) -> value.label)
-  |> check (list @@ string) "a+[da]->ad" ["ad";"d";"a"]
-  
-let test_backprop_simple () = 
-  let open Value in 
-  let x1 = c ~label:"x1" 2. in 
-  let x2 = c ~label:"x2" 0. in 
-  let w1 = c ~label:"w1" (-3.) in 
-  let w2 = c ~label:"w2" 1. in 
-  let b = c ~label:"b" 6.88 in 
-  let x1w1 = x1 * w1 |> relabel "x1w1" in 
-  let x2w2 = x2 * w2 |> relabel "x2w2" in 
-  let x1w1x2w2 = x1w1 + x2w2 |> relabel "x1w1x2w2" in 
-  let n = x1w1x2w2 + b |> relabel "n" in 
+  |> check (list @@ string) "a+[da]->ad" [ "a+d"; "d"; "a" ]
+
+let test_backward () =
+  let open Value in
+  let a = co 2. ~label:"a" in
+  let a = a.backward a in
+  check string "a.backward.label = a.label" "a" a.label
+
+(*
+     c(+)
+    / \
+  a=2 b=3
+*)
+let test_backwards_1_layer () =
+  let open Value in
+  let a = co 2. ~label:"a" in
+  let b = co 3. ~label:"b" in
+  let c = a * b |> relabel "c" in
+  let expected = [ ("a", 3.); ("b", 2.); ("c", 1.) ] in
+  let actual =
+    Utils.(backwards c |> extract_value_to_list)
+    |> List.map (fun v -> (v.label, v.grad))
+  in
+  Alcotest.(check' (list (pair string (float 0.5))))
+    ~msg:"a + b = c" ~expected ~actual
+
+let test_backwards_2_layer () =
+  let open Value in
+  let a = co 2. ~label:"a" in
+  let b = co 2. ~label:"b" in
+  let c = a + b |> relabel "c" in
+  let d = co (-2.) ~label:"d" in
+  let e = c * d |> relabel "e" in
+  let expected = [ ("a", -2.); ("b", -2.); ("c", -2.); ("d", 4.); ("e", 1.) ] in
+  let actual =
+    Utils.backwards e |> Utils.extract_value_to_list
+    |> List.map (fun v -> (v.label, v.grad))
+  in
+  Alcotest.(check' (list (pair string (float 0.5))))
+    ~msg:"simple backwards works" ~expected ~actual
+
+(* let test_backprop_simple () = *)
+(*   let open Value in *)
+(*   let b = c (-3.) ~label:"b" in *)
+(*   let c' = c 10. ~label:"c" in *)
+(*   let e = a + b |> relabel "e" in *)
+(*   let d = e + c' |> relabel "d" in *)
+(*   let f = c 2. ~label:"f" in *)
+(*   let l = d * f in *)
+(*   Utils.sort_print l; *)
+(*   () *)
+
+let test_backprop_simple_neuron () =
+  let open Value in
+  let x1 = co ~label:"x1" 2. in
+  let x2 = co ~label:"x2" 0. in
+  let w1 = co ~label:"w1" (-3.) in
+  let w2 = co ~label:"w2" 1. in
+  let b = co ~label:"b" 6.8813735870195432 in
+  let x1w1 = x1 * w1 |> relabel "x1w1" in
+  let x2w2 = x2 * w2 |> relabel "x2w2" in
+  let x1w1x2w2 = x1w1 + x2w2 |> relabel "x1w1x2w2" in
+  let n = x1w1x2w2 + b |> relabel "n" in
   let o = tanh n |> relabel "o" in
-  let o = {o with grad = 1.} in 
-  let o = o.backward () |> relabel "o" in 
-  let grads = topological_sort o |> List.map (fun value -> (value.grad, value.label)) in 
-  List.iter (fun (value, label) -> Format.eprintf "%f, %s \n%!" value label) grads ;
+  Utils.sort_print o;
   ()
-  
 
+let test_backprop_expanded_neuron () =
+  let open Value in
+  let x1 = co ~label:"x1" 2. in
+  let x2 = co ~label:"x2" 0. in
+  let w1 = co ~label:"w1" (-3.) in
+  let w2 = co ~label:"w2" 1. in
+  let b = co ~label:"b" 6.8813735870195432 in
+  let x1w1 = x1 * w1 |> relabel "x1w1" in
+  let x2w2 = x2 * w2 |> relabel "x2w2" in
+  let x1w1x2w2 = x1w1 + x2w2 |> relabel "x1w1x2w2" in
+  let n = x1w1x2w2 + b |> relabel "n" in
+  let e = exp (co 2. * n) |> relabel "e" in
+  let o = (e - co 1.) / (e + co 1.) |> relabel "o" in
+  Utils.sort_print o;
+  ()
 
-(* let test_topological_sort_loop () =
-  let a = {a with prev=[b]} 
-  and b = {b with prev=[a]} in 
-  topological_sort a
-  |> List.map (fun (value : Value.t) -> value.label)
-  |> check (list @@ string) "a -> a -> a" ["a"] *)
-
-
-let tests = [
-  ("topological sort", `Quick, test_topological_sort_c);
-  ("topological sort", `Quick, test_topological_sort_linked_list);
-  ("topological sort", `Quick, test_topological_sort_bin_tree);
-  ("topological sort", `Quick, test_topological_sort_higher_tree);
-  (* ("topological sort", `Quick, test_topological_sort_loop); *)
+let tests =
+  [
+    ("topological sort", `Quick, test_topological_sort_c);
+    ("topological sort", `Quick, test_topological_sort_linked_list);
+    ("topological sort", `Quick, test_topological_sort_bin_tree);
+    ("topological sort", `Quick, test_topological_sort_higher_tree);
+    (* ("topological sort", `Quick, test_Utils.topological_sort_loop); *)
+    ("backward", `Quick, test_backwards_1_layer);
+    ("backward", `Quick, test_backwards_2_layer);
   ]

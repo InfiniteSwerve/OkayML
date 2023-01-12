@@ -1,2 +1,0 @@
-(** @canonical Transformer.Matrices *)
-module Matrices = Transformer__Matrices

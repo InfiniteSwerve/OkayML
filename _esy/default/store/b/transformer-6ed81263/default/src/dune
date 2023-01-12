@@ -1,5 +1,0 @@
-(library
- (name transformer_stuff)
- (libraries)
- (preprocess
-  (pps ppx_deriving.ord)))

@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "ocaml": "*",
-    "@opam/dune": "*",
-    "@opam/ocaml-lsp-server": "*"
-  }
-}

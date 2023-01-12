@@ -1,4 +1,0 @@
-#!/bin/sh
-export ESY__NODE_BIN_PATH='/home/thetis/Code/exploring/transformer/_esy/default/bin'
-exec '/usr/bin/node' -r '/home/thetis/Code/exploring/transformer/_esy/default/pnp.js' "$@"
-              
