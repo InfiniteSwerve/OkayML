@@ -87,7 +87,35 @@ let test_backwards_2_layer () =
     |> List.map (fun v -> (v.label, v.grad))
   in
   Alcotest.(check' (list (pair string (float 0.5))))
-    ~msg:"simple backwards works" ~expected ~actual
+    ~msg:"two layer backwards works" ~expected ~actual
+
+let test_backwards_a_squared () =
+  let open Value in
+  let a = co 2. ~label:"a" in
+  let b = a + a |> relabel "b" in
+  let expected = [] in
+  let actual =
+    Utils.backwards b |> Utils.extract_value_to_list
+    |> List.map (fun v -> (v.label, v.grad))
+  in
+  Alcotest.(check' (list (pair string (float 0.5))))
+    ~msg:"same variable can appear twice" ~expected ~actual
+
+let test_backwards_use_twice_3_layer () =
+  let open Value in
+  let a = co 2. ~label:"a" in
+  let b = co 2. ~label:"b" in
+  let c = a + b |> relabel "c" in
+  let d = co (-2.) ~label:"d" in
+  let e = c * d |> relabel "e" in
+  let f = e + c |> relabel "f" in
+  let expected = [] in
+  let actual =
+    Utils.backwards f |> Utils.extract_value_to_list
+    |> List.map (fun v -> (v.label, v.grad))
+  in
+  Alcotest.(check' (list (pair string (float Float.epsilon))))
+    ~msg:"three layer with double use backwards works" ~expected ~actual
 
 (* let test_backprop_simple () = *)
 (*   let open Value in *)
@@ -140,4 +168,6 @@ let tests =
     (* ("topological sort", `Quick, test_Utils.topological_sort_loop); *)
     ("backward", `Quick, test_backwards_1_layer);
     ("backward", `Quick, test_backwards_2_layer);
+    ("backward", `Quick, test_backwards_a_squared);
+    ("backward", `Quick, test_backwards_use_twice_3_layer);
   ]
