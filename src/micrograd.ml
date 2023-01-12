@@ -1,4 +1,9 @@
 module Value = struct
+  (*
+  How do we deal with repeated variables?
+  - make values refs instead
+  - make gradients refs
+   *)
   type value = {
     value : float;
     prev : prev;
