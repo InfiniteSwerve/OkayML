@@ -1,9 +1,10 @@
+(*
+   What does this library do:
+
+   This library will tracks the gradients of any expression created with its interface. 
+   You can propagate the gradients backwards from the highest level expression i.e. c = a + b => backwards c
+*)
 module Value = struct
-  (*
-  How do we deal with repeated variables?
-  - make values refs instead
-  - make gradients refs
-   *)
   type value = {
     value : float;
     prev : prev;
@@ -200,41 +201,5 @@ module Utils = struct
     let out, _ = traverse ([], visited) value in
     out
 
-  (* This might call things out of heirarchical order *)
-  (* This is extremely bad, and jumps up the computational complexity
-     of backwards from O(n) to something like the total path count *)
-  (* let rec map f value = *)
-  (*   let value = f value in *)
-  (*   { value with prev = List.map (map f) value.prev } *)
-
-  (* let backwards value = *)
-  (*   let value = { value with grad = ref 1. } in *)
-  (*   map *)
-  (*     (fun v -> *)
-  (*       v.backward v; *)
-  (*       v) *)
-  (*     value *)
-
-  (* let extract_value_to_list value = *)
-  (*   let rec extract value out = *)
-  (*     let out = value :: out in *)
-  (*     List.fold_right (fun out value -> extract out value) value.prev out *)
-  (*   in *)
-  (*   extract value [] *)
   let relabel label value = { value with label }
-
-  (* let sort_print value = *)
-  (*   let grads = *)
-  (*     topological_sort_backward value *)
-  (*     |> List.map (fun value -> (value.value, value.label, value.grad)) *)
-  (*   in *)
-  (*   Format.eprintf "length of chain is %d\n%!" (List.length grads); *)
-  (*   List.iter *)
-  (*     (fun (value, label, grad) -> *)
-  (*       Format.eprintf "%f, %s, %f\n%!" value label grad) *)
-  (*     grads; *)
-  (*   () *)
 end
-(* TODO: Graph visualization module *)
-(* TODO: We might need to make the backwards function operate on grad references
-   instead of modifying the previous *)
