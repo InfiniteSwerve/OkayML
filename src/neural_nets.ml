@@ -40,5 +40,5 @@ module MLP = struct
     in
     build [] (in_size :: out_sizes)
 
-  let call input network = List.map (Layer.call input) network
+  let call input network = List.fold_left Layer.call input network
 end

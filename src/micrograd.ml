@@ -53,6 +53,9 @@ module Value = struct
       index = get_index ();
     }
 
+  let zero = co ~label:"0" 0.
+  let one = co ~label:"1" 1.
+
   let ( + ) l r =
     let value = l.value +. r.value in
     let out =

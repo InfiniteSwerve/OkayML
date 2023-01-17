@@ -7,6 +7,10 @@ open Alcotest
 (*   Micrograd.test_backprop_expanded_neuron ()  *)
 
 let test_suites =
-  [ ("matrices", Matrices.tests); ("micrograd", Micrograd.tests) ]
+  [
+    ("matrices", Matrices.tests);
+    ("micrograd", Micrograd.tests);
+    ("neural networks", Neural_nets.tests);
+  ]
 
 let () = run "proj" test_suites
