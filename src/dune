@@ -1,5 +1,5 @@
 (library
  (name transformer_stuff)
- (libraries)
+ (libraries graphics)
  (preprocess
   (pps ppx_deriving.ord ppx_deriving.eq ppx_deriving.show)))

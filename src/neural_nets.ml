@@ -1,4 +1,5 @@
 open Micrograd
+(* Okay Ml*)
 
 module Neuron = struct
   type neuron = { weights : Value.t list; bias : Value.t }
@@ -16,18 +17,25 @@ module Neuron = struct
     List.map2 (fun (l : t) r -> l * r) neuron.weights input
     |> List.fold_left ( + ) (co 0.)
     |> fun ans -> ans + neuron.bias |> tanh
+
+  let get_parameters neuron = neuron.bias :: neuron.weights
 end
 
-module Layer = struct
+module Fully_Connected_Layer = struct
   type layer = Neuron.t list
   type t = layer
 
   let init in_size out_size = List.init out_size (fun _ -> Neuron.init in_size)
   let call input layer = List.map (Neuron.call input) layer
+
+  let get_parameters layer =
+    List.map Neuron.get_parameters layer |> List.flatten
 end
 
 module MLP = struct
-  type mlp = Layer.t list
+  module Layer = Fully_Connected_Layer
+
+  type mlp = Fully_Connected_Layer.t list
   type t = mlp
 
   let init in_size out_sizes =
@@ -41,4 +49,41 @@ module MLP = struct
     build [] (in_size :: out_sizes)
 
   let call input network = List.fold_left Layer.call input network
+
+  let get_parameters network =
+    List.map Layer.get_parameters network |> List.flatten
+
+  let descend loss network step_size =
+    let _ = Utils.backwards loss in
+    let params = get_parameters network in
+    List.iter
+      (fun (v : Value.t) ->
+        (* Format.eprintf "info for %s is:\n%!" v.op; *)
+        (* Format.eprintf "initial value is %f\n%!" !(v.value); *)
+        (* Format.eprintf "gradient is   %f\n%!" !(v.grad); *)
+        (* Format.eprintf "step size is   %f\n%!" step_size; *)
+        v.value := !(v.value) -. (!(v.grad) *. step_size))
+        (* Format.eprintf "final value is %f\n%!" !(v.value)) *)
+      params
+end
+
+module Sgd (Network : sig
+  type network
+
+  val get_parameters : network -> Value.t list
+  val call : Value.t list -> network -> Value.t list
+end) =
+struct
+  let descend loss network step_size =
+    let _ = Utils.backwards loss in
+    let params = Network.get_parameters network in
+    List.iter
+      (fun (v : Value.t) ->
+        (* Format.eprintf "info for %s is:\n%!" v.op; *)
+        (* Format.eprintf "initial value is %f\n%!" !(v.value); *)
+        (* Format.eprintf "gradient is   %f\n%!" !(v.grad); *)
+        (* Format.eprintf "step size is   %f\n%!" step_size; *)
+        v.value := !(v.value) -. (!(v.grad) *. step_size))
+        (* Format.eprintf "final value is %f\n%!" !(v.value)) *)
+      params
 end

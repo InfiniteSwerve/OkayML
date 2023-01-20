@@ -32,6 +32,7 @@
                   ocamlformat
                   ppx_deriving
                   alcotest
+                  graphics
                 ];
             };
         }
