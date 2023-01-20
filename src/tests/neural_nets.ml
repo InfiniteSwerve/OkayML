@@ -15,8 +15,9 @@ let basic_neuron_test () =
 
 let basic_layer_test () =
   let open Neural_nets in
+  let module Layer = Fully_Connected_Layer in
   Stdlib.Random.init 0;
-  let layer = Layer.init 1 3 in
+  let layer = Layer.init 2 3 in
   let x = Micrograd.Value.co 5. in
   let expected = [ -0.72661; -0.795354; -0.930156 ] in
   let actual = List.map value_to_float (Layer.call [ x ] layer) in

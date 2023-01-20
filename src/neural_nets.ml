@@ -68,12 +68,14 @@ module MLP = struct
 end
 
 module Sgd (Network : sig
-  type network
+  type t
 
-  val get_parameters : network -> Value.t list
-  val call : Value.t list -> network -> Value.t list
+  val get_parameters : t -> Value.t list
+  val call : Value.t list -> t -> Value.t list
 end) =
 struct
+  type network = Network.t
+
   let descend loss network step_size =
     let _ = Utils.backwards loss in
     let params = Network.get_parameters network in
@@ -86,4 +88,32 @@ struct
         v.value := !(v.value) -. (!(v.grad) *. step_size))
         (* Format.eprintf "final value is %f\n%!" !(v.value)) *)
       params
+
+  (* gets loss for a single training datum *)
+  let get_loss x y network =
+    let y_pred = Network.call x network in
+    List.fold_left2
+      Value.(fun acc l r -> ((l - r) ** co 2.) + acc)
+      (Value.co 0.) y y_pred
+
+  (* What do we want iter_descend to do?
+     We want it to take some dataset and do training on it.
+     It'll update the gradients after batch_size trainings.
+  *)
+  let iter_descend dataset network step_size
+      (* _batch_size _iterations *) epochs =
+    Format.eprintf "\n%!";
+    let rec loop index =
+      if index = epochs then ()
+      else
+        let loss =
+          List.fold_left
+            Value.(fun acc (x, y) -> get_loss x y network + acc)
+            (Value.co 0.) dataset
+        in
+        Format.eprintf "\n%d loss is :%f\n%!" index !(loss.value);
+        descend loss network step_size;
+        loop (index + 1)
+    in
+    loop 0
 end
