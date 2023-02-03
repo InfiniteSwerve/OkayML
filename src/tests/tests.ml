@@ -11,6 +11,7 @@ let test_suites =
     ("matrices", Matrices.tests);
     ("micrograd", Micrograd.tests);
     ("neural networks", Neural_nets.tests);
+    ("stats", Stats.tests);
   ]
 
 let () = run "proj" test_suites

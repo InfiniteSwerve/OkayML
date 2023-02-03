@@ -1,0 +1,86 @@
+open Transformer_stuff
+
+let text = In_channel.input_all (Data_loader.Shakespear.get_shakespear_file ())
+let chars = String.fold_right (fun c acc -> c :: acc) text []
+
+module S = Set.Make (Char)
+
+let unique_chars = List.fold_left (fun s c -> S.add c s) S.empty chars
+let char_list = S.fold (fun c l -> c :: l) unique_chars []
+
+module Itos = Map.Make (Int)
+module Stoi = Map.Make (Char)
+
+let itos =
+  let rec loop i map = function
+    | char :: chars -> loop (i + 1) (Itos.add i char map) chars
+    | [] -> map
+  in
+  loop 0 Itos.empty char_list
+
+let stoi =
+  let rec loop i map = function
+    | char :: chars -> loop (i + 1) (Stoi.add char i map) chars
+    | [] -> map
+  in
+  loop 0 Stoi.empty char_list
+
+(* TODO: memory leak *)
+let char_list_to_string cl =
+  let buff = Buffer.create (List.length cl) in
+  List.iter (Buffer.add_char buff) cl;
+  Buffer.contents buff
+
+(* string to ints *)
+let encode string =
+  String.fold_right (fun c l -> Stoi.find c stoi :: l) string []
+
+(* ints to string *)
+let decode string =
+  List.map (fun i -> Itos.find i itos) string |> char_list_to_string
+
+let print_encoded nums = List.iter (Format.eprintf "%d %!") nums
+
+let train_test_data data =
+  let data_len = String.length data in
+  let n = Int.of_float Float.(0.9 *. of_int data_len) in
+  let train_data = String.sub data 0 (n - 1) in
+  let val_data = String.sub data (n - 1) (data_len - 1) in
+  (train_data, val_data)
+
+let context data =
+  let rev_data = List.rev data in
+  let window_size = List.length data in
+  let out =
+    match rev_data with
+    | target :: context -> (context, target) :: []
+    | [] -> failwith "context needs at least two items"
+  in
+  let rec loop window_size out =
+    match window_size = 0 with
+    | true -> out
+    | false ->
+        let data, _ = List.hd out in
+        let out =
+          match data with
+          | target :: context -> (context, target) :: out
+          | [] -> failwith "list is not large enough"
+        in
+        loop (window_size - 1) out
+  in
+  loop window_size out
+
+(* let _ = *)
+(*   let og = "hii there" in *)
+(*   Format.eprintf "og string is: %s\n%!" og; *)
+(*   let eog = encode og in *)
+(*   Format.eprintf "encoded string is: %!"; *)
+(*   List.iter (Format.eprintf "%d %!") eog; *)
+(*   Format.eprintf "\n%!"; *)
+(*   Format.eprintf "decoded string is %s\n%!" (decode eog) *)
+
+(* let _ = *)
+(*   let sf = Data_loader.Shakespear.get_shakespear_file () in *)
+(*   let text = In_channel.really_input_string sf 1000 |> Option.get in *)
+(*   print_encoded (encode text); *)
+(*   Format.eprintf "\n%s\n%!" (decode (encode text)) *)

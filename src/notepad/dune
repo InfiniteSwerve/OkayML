@@ -1,3 +1,6 @@
 (executable
   (name notepad)
-  (libraries transformer_stuff))
+  (libraries lacaml unix transformer_stuff)
+ (preprocess
+  (pps ppx_deriving.ord ))
+  )

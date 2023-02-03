@@ -33,6 +33,7 @@
                   ppx_deriving
                   alcotest
                   graphics
+                  lacaml
                 ];
             };
         }

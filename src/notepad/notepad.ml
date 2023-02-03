@@ -1,17 +1,130 @@
 open Transformer_stuff
-open Neural_nets
+open Matrices
+
+module Char_pair = struct
+  type t = char * char [@@deriving ord]
+end
+
+let names = Data_loader.Makemore.get_names ()
+
+module Gram = Map.Make (Char_pair)
+
+let to_pairs name =
+  let string = "." ^ name ^ "." in
+  let ln = String.length string in
+  let rec do_string curr out =
+    match curr = ln with
+    | true -> List.rev out
+    | false -> do_string (curr + 1) ((string.[curr - 1], string.[curr]) :: out)
+  in
+  do_string 1 []
+
+let name_pairs = List.map to_pairs names |> List.rev |> List.concat
+
+let add_pair_to_map map pair =
+  Gram.update pair
+    (fun n -> match n with Some n -> Some (n + 1) | None -> Some 1)
+    map
+
+let pair_count = List.fold_left add_pair_to_map Gram.empty name_pairs
+
+module Alpha = Map.Make (Char)
+
+let alphabet = ".abcdefghijklmnopqrstuvwxyz"
+
+module S = Set.Make (Char)
+
+let name_string = String.concat "" ("." :: names)
+let unique_chars = String.fold_left (fun s c -> S.add c s) S.empty name_string
+let char_list = S.fold (fun c l -> c :: l) unique_chars [] |> List.rev
+
+module Itos = Map.Make (Int)
+module Stoi = Map.Make (Char)
+
+let itos =
+  let rec loop i map = function
+    | char :: chars -> loop (i + 1) (Itos.add i char map) chars
+    | [] -> map
+  in
+  loop 0 Itos.empty char_list
+
+let stoi =
+  let rec loop i map = function
+    | char :: chars -> loop (i + 1) (Stoi.add char i map) chars
+    | [] -> map
+  in
+  loop 0 Stoi.empty char_list
+
+let bigram_counts =
+  Mat.make
+    ~initialize:(fun rowi coli ->
+      let rc, cc = (Itos.find rowi itos, Itos.find coli itos) in
+      match Gram.find_opt (rc, cc) pair_count with
+      | Some n -> Float.of_int n
+      | None -> 1.)
+    27 27
+
+let probs =
+  Mat.map_rows
+    (fun row ->
+      let sm = Vec.sum row in
+      Vec.map (fun count -> count /. sm) row)
+    bigram_counts
+
+let probs_w_char char =
+  let i = Stoi.find char stoi in
+  Mat.row probs i
+
+let prob_w_chars (c1, c2) =
+  let i1, i2 = (Stoi.find c1 stoi, Stoi.find c2 stoi) in
+  Mat.get_val i1 i2 probs
+
+let get_next_char curr =
+  let curr_index = Alpha.find curr stoi in
+  let probs = Mat.row probs curr_index in
+  let next_char_index = List.hd @@ Stats.multinomial 1 (Vec.to_list probs) in
+  alphabet.[next_char_index]
+
+let get_name () =
+  let rec loop out curr =
+    let next_char = get_next_char curr in
+    let out = next_char :: out in
+    if next_char = '.' then List.rev out else loop out next_char
+  in
+  let name_list = loop [] '.' in
+  List.map Char.escaped name_list |> String.concat ""
+
+let get_loss ((c1, c2) as gram) =
+  let prob = prob_w_chars gram in
+  let logprob = log prob in
+  Format.eprintf "%c%c: %.4f %.4f\n%!" c1 c2 prob logprob;
+  logprob
+
+let max = 20
+
+let rec loop l index ll =
+  match index = max with
+  | true -> ll
+  | false -> (
+      match l with
+      | gram :: tl ->
+          let ll = ll +. get_loss gram in
+          loop tl (index + 1) ll
+      | [] -> ll)
+
+(* let _ = *)
+(*   Format.eprintf "nll = %.4f\n%!" (loop name_pairs 0 0. /. Float.of_int max) *)
 module Value = Micrograd.Value
 
-let co = Micrograd.Value.co
-let n = MLP.init 3 [ 4; 4; 1 ]
+let co = Value.co
 
-let xs =
-  List.map (List.map co)
-    [ [ 2.; 3.; -1. ]; [ 3.; -1.; 0.5 ]; [ 0.5; 1.; 1. ]; [ 1.; 1.; -1. ] ]
+let one_hot classes num =
+  let v = Vec.make classes (co 0.) in
+  v.(num) <- co 1.;
+  v
 
-let ys = List.map (List.map co) [ [ 1. ]; [ -1. ]; [ -1. ]; [ 1. ] ]
-let dataset = List.combine xs ys
-
-module Sgd = Neural_nets.Sgd (MLP)
-
-let _ = Sgd.iter_descend dataset n 0.1 40
+let xs, ys = List.split name_pairs
+let backwards = Micrograd.Utils.backwards
+let w = Mat.make ~initialize:(fun _ _ -> co (Stats.rand_normal ())) 27 27
+let xenc = Vec.map (fun c -> Stoi.find c stoi |> one_hot 27) (Array.of_list xs)
+let logits = Mat.mult xenc w

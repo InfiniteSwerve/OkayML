@@ -18,9 +18,9 @@ let basic_layer_test () =
   let module Layer = Fully_Connected_Layer in
   Stdlib.Random.init 0;
   let layer = Layer.init 2 3 in
-  let x = Micrograd.Value.co 5. in
-  let expected = [ -0.72661; -0.795354; -0.930156 ] in
-  let actual = List.map value_to_float (Layer.call [ x ] layer) in
+  let x = List.map Micrograd.Value.co [ 5.; 3. ] in
+  let expected = [ 0.506371; 0.567916; 0.999966 ] in
+  let actual = List.map value_to_float (Layer.call x layer) in
   Alcotest.(check' (list (float 0.001)))
     ~msg:"single layer works" ~expected ~actual
 
