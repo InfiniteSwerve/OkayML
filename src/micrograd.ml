@@ -60,6 +60,7 @@ module Value = struct
 
   let zero = co ~label:"0" 0.
   let one = co ~label:"1" 1.
+  let two = co ~label:"2" 2.
 
   let ( + ) l r =
     let value = ref @@ (gv l +. gv r) in

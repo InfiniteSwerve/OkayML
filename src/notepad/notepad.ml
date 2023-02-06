@@ -127,4 +127,4 @@ let xs, ys = List.split name_pairs
 let backwards = Micrograd.Utils.backwards
 let w = Mat.make ~initialize:(fun _ _ -> co (Stats.rand_normal ())) 27 27
 let xenc = Vec.map (fun c -> Stoi.find c stoi |> one_hot 27) (Array.of_list xs)
-let logits = Mat.mult xenc w
+(* let logits = Mat.mult xenc w *)

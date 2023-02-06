@@ -1,16 +1,22 @@
 open Alcotest
 open Transformer_stuff.Matrices
-open Vec
+
+let co = Transformer_stuff.Micrograd.Value.co
 
 let test_dot_product () =
-  dot_product [| 1.; 1. |] [| 1.; 1. |] |> check (float 0.1) "works at all" 2.
+  let v = Vec.make 2 (co 1.) in
+  let o = Vec.dot_product v v in
+  check (float 0.1) "works at all" 2. !(o.value)
 
 let test_dot_product_small () =
-  dot_product [| 1. |] [| 1. |] |> check (float 0.1) "works small" 1.
+  let v = Vec.make 1 (co 1.) in
+  let o = Vec.dot_product v v in
+  check (float 0.1) "works at all" 1. !(o.value)
 
 let test_dot_product_big () =
-  let arr = Array.make 1000 1. in
-  dot_product arr arr |> check (float 0.1) "works small" 1000.
+  let v = Vec.make 1000 (co 1.) in
+  let o = Vec.dot_product v v in
+  check (float 0.1) "big" 1000. !(o.value)
 
 let test_mapi () =
   let m = Mat.zeros 2 2 in
