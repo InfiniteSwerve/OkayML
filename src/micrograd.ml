@@ -8,9 +8,11 @@ module Value = struct
   type value = {
     value : float ref;
     prev : prev;
+    (* TODO: Remove op *)
     op : string;
     grad : float ref;
     backward : value -> unit;
+    (* TODO: Remove label *)
     label : string;
     index : int;
   }
@@ -55,6 +57,18 @@ module Value = struct
       grad = ref 0.;
       backward = (fun _ -> ());
       label;
+      index = get_index ();
+    }
+
+  let of_int num =
+    let num = Float.of_int num in
+    {
+      value = ref num;
+      prev = [];
+      op = "c";
+      grad = ref 0.;
+      backward = (fun _ -> ());
+      label = "";
       index = get_index ();
     }
 
@@ -145,6 +159,22 @@ module Value = struct
       { out with backward }
 
   let ( / ) l r = l * (r ** co (-1.))
+
+  let log input =
+    let value = ref @@ Float.log @@ gv input in
+    let out =
+      {
+        value;
+        prev = [ input ];
+        op = "log";
+        grad = ref 0.;
+        backward = empty.backward;
+        label = "";
+        index = get_index ();
+      }
+    in
+    let backward out = input.grad := gg input +. (1. /. gv input *. gg out) in
+    { out with backward }
 
   let tanh input =
     let value =
