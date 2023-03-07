@@ -8,10 +8,8 @@ module Value = struct
   type value = {
     value : float ref;
     prev : prev;
-    (* TODO: Remove op *)
     grad : float ref;
     backward : value -> unit;
-    (* TODO: Remove label *)
     index : int;
   }
 
