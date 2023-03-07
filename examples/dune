@@ -1,3 +1,7 @@
-(executable
-  (name mlp)
-  (libraries transformer_stuff) )
+(executables
+  (names mlp makemore1)
+  (libraries transformer_stuff)
+ (preprocess
+  (pps ppx_deriving.ord ))
+  )
+

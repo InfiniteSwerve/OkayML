@@ -1,26 +1,38 @@
-let train_labels_file = In_channel.open_bin "data/train-labels-idx1-ubyte"
-let train_data_file = In_channel.open_bin "data/train-images-idx3-ubyte"
-let gd () = In_channel.input_line train_labels_file
-let pc c = Format.eprintf "%c%!" c
+module Utils = struct
+  let string_to_list s = String.fold_right (fun c acc -> c :: acc) s []
 
-let rec repl index =
-  if index = 28 then
-    let _ = In_channel.(input_line stdin) in
-    repl 0
-  else
-    let s =
-      String.fold_right
-        (fun c l -> (match Char.code c with 0 -> ' ' | _ -> '0') :: l)
-        (Option.get @@ In_channel.really_input_string train_data_file 28)
-        []
+  let n_items n l =
+    let rec build index l out =
+      match index = 0 with
+      | true ->
+          let hd, out =
+            match out with
+            | hd :: tl -> (hd, tl)
+            | [] -> failwith "will never reach here"
+          in
+          (hd, List.rev out)
+      | false -> (
+          match l with
+          | hd :: tl -> build (index - 1) tl (hd :: out)
+          | [] -> failwith "n_items cannot take a list of smaller size than n")
     in
-    Format.eprintf "\n%!";
-    List.iter pc s;
-    repl (index + 1)
+    build n l []
 
-(* let _ = *)
-(*   let _ = In_channel.really_input_string train_data_file 16 |> Option.get in *)
-(*   repl 0 *)
+  let to_tuples block_size word =
+    let ln = String.length word in
+    let prepend = String.make block_size '.' in
+    let string = prepend ^ word ^ "." in
+    let rec make_tuples index out l =
+      match index = 0 with
+      | true -> List.rev out
+      | false -> (
+          match l with
+          | _ :: tl -> make_tuples (index - 1) (n_items block_size l :: out) tl
+          | [] ->
+              failwith "to_tuples should only call this with a block size of 0")
+    in
+    make_tuples ln [] (string_to_list string)
+end
 
 module Makemore = struct
   let names_file = In_channel.open_bin "data/names.txt"
@@ -32,8 +44,4 @@ module Makemore = struct
       | None -> out
     in
     get []
-end
-
-module Shakespear = struct
-  let get_shakespear_file () = In_channel.open_bin "data/input.txt"
 end

@@ -8,17 +8,17 @@ module VMat = VTensor.Mat
 let co = Transformer_stuff.Micrograd.Value.co
 
 let test_dot_product () =
-  let v = VVec.make 2 (co 1.) in
+  let v = VVec.make ~initialize:(fun _ -> co 1.) 2 in
   let o = VVec.dot_product v v in
   check (float 0.1) "works at all" 2. !(o.value)
 
 let test_dot_product_small () =
-  let v = VVec.make 1 (co 1.) in
+  let v = VVec.make ~initialize:(fun _ -> co 1.) 1 in
   let o = VVec.dot_product v v in
   check (float 0.1) "works at all" 1. !(o.value)
 
 let test_dot_product_big () =
-  let v = VVec.make 1000 (co 1.) in
+  let v = VVec.make ~initialize:(fun _ -> co 1.) 1000 in
   let o = VVec.dot_product v v in
   check (float 0.1) "big" 1000. !(o.value)
 

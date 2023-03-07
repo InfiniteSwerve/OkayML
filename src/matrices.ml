@@ -1,8 +1,25 @@
+(* TODO: We should be able to combine scalars, vectors, and matrices into kinds by doing something like
+
+   type number =
+     | Int of int
+     | Float of float
+
+   type Tensor =
+     | Matrix of Mat.t
+     | Vector of Vec.t
+     | Scalar of number
+
+   let ( + ) =
+     match a,b with ...
+*)
+
 module Vec = struct
   type 'a vector = 'a Array.t
   type 'a t = 'a vector
 
-  let make size x = Array.make size x
+  let make ~initialize size =
+    Array.make size 0. |> Array.mapi (fun i _ -> initialize i)
+
   let map f vec = Array.map f vec
   let mapi f vec = Array.mapi f vec
   let map2 f vec1 vec2 = Array.map2 f vec1 vec2
@@ -27,6 +44,9 @@ module Mat = struct
     { matrix = Array.of_list l; cols = col_count; rows = row_count }
 
   let to_lists mi = to_row_list mi |> List.map Vec.to_list
+
+  let of_lists (mi : 'a list list) : 'a t =
+    List.map Vec.of_list mi |> of_row_list
 
   let of_arrays (a : 'a Array.t Array.t) : 'a matrix =
     let rows = Array.length a in
@@ -141,6 +161,9 @@ struct
     let softmax vector =
       let exp_mean = fold (fun acc float -> (two ** float) + acc) zero vector in
       map (fun float -> (two ** float) / exp_mean) vector
+
+    let zeros m = make ~initialize:(fun _ -> zero) m
+    let randn m = make ~initialize:(fun _ -> of_float @@ Stats.rand_normal ()) m
   end
 
   module Mat = struct
@@ -176,12 +199,12 @@ struct
 
     (* left vector matrix multiplication *)
     let vmult v mi =
-      let vo = Vec.make (Vec.length v) zero in
+      let vo = Vec.zeros (Vec.length v) in
       Vec.mapi (fun ind _ -> Vec.dot_product v (col mi ind)) vo
 
     (* right matrix vector multiplication *)
     let multv mi v =
-      let vo = Vec.make (Vec.length v) zero in
+      let vo = Vec.zeros (Vec.length v) in
       Vec.mapi (fun ind _ -> Vec.dot_product v (row mi ind)) vo
 
     (* TODO: This is a naive and slow O(n^3) implementation *)

@@ -9,11 +9,9 @@ module Value = struct
     value : float ref;
     prev : prev;
     (* TODO: Remove op *)
-    op : string;
     grad : float ref;
     backward : value -> unit;
     (* TODO: Remove label *)
-    label : string;
     index : int;
   }
 
@@ -41,22 +39,17 @@ module Value = struct
     {
       value = ref 0.;
       prev = [];
-      op = "";
       grad = ref 0.;
       backward = (fun _ -> ());
-      label = "";
       index = get_index ();
     }
 
-  let co ?(label = "") num =
-    let label = if label = "" then string_of_float num else label in
+  let co num =
     {
       value = ref num;
       prev = [];
-      op = "c";
       grad = ref 0.;
       backward = (fun _ -> ());
-      label;
       index = get_index ();
     }
 
@@ -65,16 +58,14 @@ module Value = struct
     {
       value = ref num;
       prev = [];
-      op = "c";
       grad = ref 0.;
       backward = (fun _ -> ());
-      label = "";
       index = get_index ();
     }
 
-  let zero = co ~label:"0" 0.
-  let one = co ~label:"1" 1.
-  let two = co ~label:"2" 2.
+  let zero = co 0.
+  let one = co 1.
+  let two = co 2.
 
   let ( + ) l r =
     let value = ref @@ (gv l +. gv r) in
@@ -82,10 +73,8 @@ module Value = struct
       {
         value;
         prev = [ l; r ];
-        op = "+";
         grad = ref 0.;
         backward = empty.backward;
-        label = "(" ^ l.label ^ "+" ^ r.label ^ ")";
         index = get_index ();
       }
     in
@@ -102,10 +91,8 @@ module Value = struct
       {
         value;
         prev = [ l; r ];
-        op = "*";
         grad = ref 0.;
         backward = empty.backward;
-        label = "(" ^ l.label ^ "*" ^ r.label ^ ")";
         index = get_index ();
       }
     in
@@ -125,10 +112,8 @@ module Value = struct
       {
         value;
         prev = [ v ];
-        op = "exp";
         grad = ref 0.;
         backward = empty.backward;
-        label = "exp (" ^ v.label ^ ")";
         index = get_index ();
       }
     in
@@ -137,26 +122,22 @@ module Value = struct
 
   (* u must be a float*)
   let ( ** ) l u =
-    if u.op != "c" then failwith "exponent must be float value"
-    else
-      let value = ref @@ (gv l ** gv u) in
-      let out =
-        {
-          value;
-          prev = [ l; u ];
-          op = "**";
-          grad = ref 0.;
-          backward = empty.backward;
-          label = "(" ^ l.label ^ "**" ^ u.label ^ ")";
-          index = get_index ();
-        }
-      in
-      let backward out =
-        let og = gg out in
-        l.grad := gg l +. (gv u *. ((gv l ** (gv u -. 1.)) *. og));
-        u.grad := gg u +. ((gv l ** gv u) *. og)
-      in
-      { out with backward }
+    let value = ref @@ (gv l ** gv u) in
+    let out =
+      {
+        value;
+        prev = [ l; u ];
+        grad = ref 0.;
+        backward = empty.backward;
+        index = get_index ();
+      }
+    in
+    let backward out =
+      let og = gg out in
+      l.grad := gg l +. (gv u *. ((gv l ** (gv u -. 1.)) *. og));
+      u.grad := gg u +. ((gv l ** gv u) *. og)
+    in
+    { out with backward }
 
   let ( / ) l r = l * (r ** co (-1.))
 
@@ -166,10 +147,8 @@ module Value = struct
       {
         value;
         prev = [ input ];
-        op = "log";
         grad = ref 0.;
         backward = empty.backward;
-        label = "";
         index = get_index ();
       }
     in
@@ -185,10 +164,8 @@ module Value = struct
       {
         value;
         prev = [ input ];
-        op = "tanh";
         grad = ref 0.;
         backward = empty.backward;
-        label = "";
         index = get_index ();
       }
     in
@@ -223,6 +200,4 @@ module Utils = struct
     let value = { value with grad = ref 1. } in
     List.iter (fun v -> v.backward v) (topological_sort value);
     value
-
-  let relabel label value = { value with label }
 end
